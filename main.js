@@ -1,12 +1,18 @@
 let ul = document.querySelector("ul");
 let input = document.querySelector(".input");
-var arr = [];
+let arr = [];
+let footer = document.querySelector(".footer");
+let listItems = document.querySelector("span");
+let activeBtn = document.querySelector(".active");
+let completeBtn = document.querySelector(".completed")
+let allbtn = document.querySelector(".all");
 
+// Main function where the object is being pushed into array.
 function mainFunction(event) {
     if (input.value === '') {
         // alert('Input cannot be empty!')
     } else if (event.keyCode === 13) {
-        let todo = {
+        let todo = {                 
             text: event.target.value,
             isDone: false,
             id : Date.now()
@@ -17,7 +23,7 @@ function mainFunction(event) {
 }
 
 //Function where loop over array is being run.
-function loopArray(event) {
+function loopArray(arr) {
     ul.innerHTML = "";
     arr.forEach(looping => {
         let li = document.createElement("li");
@@ -37,10 +43,12 @@ function loopArray(event) {
         li.append(checkbox, p, span);
         
         ul.append(li);
-        
-        console.log(ul);
 
+        console.log(ul);
+        
         checkbox.addEventListener("click", () => strkeItem(looping.id));
+        
+        itemsLeft();
         
     })
     input.value = "";
@@ -70,5 +78,38 @@ function strkeItem (id) {
     })
 }
 
+// Items left.
+function itemsLeft(loopArray, event) {
+    let items = arr.filter(value => (value.isDone === false)).length;
+    listItems.innerText = `${items} items left`;
+}
+
+// Active.
+function activeItems(arr, event){
+    ul.innerText = '';
+    arr = arr.filter(selected => selected.isDone === false);
+    console.log(arr);
+    loopArray(arr);
+}
+
+// Completed.
+function completeItems(arr, event){
+    ul.innerHTML = "";
+    let completeArray = [];
+    completeArray = arr.filter(comp => comp.isDone === true);
+    loopArray(completeArray);
+    console.log(completeArray);
+}
+
+//All.
+function allItems (arr, event){
+    ul.innerHTML = '';
+    loopArray(arr);
+    console.log(arr);
+}
+
 document.addEventListener("keyup", mainFunction);
 ul.addEventListener("click", removeItems);
+activeBtn.addEventListener("click", () => activeItems(arr, event));
+completeBtn.addEventListener("click", () => completeItems(arr, event));
+allbtn.addEventListener("click", () => allItems(arr, event));
